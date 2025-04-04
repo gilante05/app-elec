@@ -17,3 +17,7 @@ CREATE VIEW facture AS (
     AND co.CodeCompteur = re.CodeCompteur
     AND re.CodeReleve = p.CodeReleve
 );
+
+SELECT * FROM `facture` WHERE `CodeCli`='98217981' AND `TypeCompteur`='ELECTRICITE' AND MONTH(`Date_releve`) = MONTH('2025-04-20');
+SELECT * FROM `facture` WHERE `CodeCli`='98217981' AND `TypeCompteur`='EAU' AND MONTH(`Date_releve`) = MONTH('2025-03');
+SELECT * FROM `facture` WHERE `CodeCli`='98217981' AND `TypeCompteur`='EAU' AND MONTH(`Date_releve`) = 3;
