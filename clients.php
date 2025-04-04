@@ -50,6 +50,7 @@
                             <th colspan="2">Actions</th>
                         </tr>
                     </thead>
+                    <!--
                     <tfoot>
                         <tr>
                             <th>Code</th>
@@ -62,6 +63,7 @@
                             <th colspan="2">Actions</th>
                         </tr>
                     </tfoot>
+                    -->
                     <tbody>
                     <?php foreach($clients as $client): ?>
                             <tr>
