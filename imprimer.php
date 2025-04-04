@@ -13,7 +13,8 @@ $pdf->AddPage();
 $pdf->SetFont('Arial', 'B', 18);
 
 // Prints a cell with given text 
-$pdf->Cell(60,20,'Hello GeeksforGeeks!');
+$pdf->Cell(60,20,'JIRO SY RANO MALAGASY');
+$pdf->Cell(20,80,'Votre facture du mois: ');
 
 // return the generated output
 $pdf->Output();
