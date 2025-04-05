@@ -1,4 +1,11 @@
 <?php 
+    session_start(); 
+     if(!(isset($_SESSION['is_connected']) && $_SESSION['is_connected'] == 'connected' ))
+     {
+         header('location:login.php');
+         die();
+     }
+
     require('includes/connexion.php');
     
     $db = connect_bd();

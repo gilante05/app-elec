@@ -1,5 +1,11 @@
 <?php 
     //https://www.pierre-giraud.com/php-mysql-apprendre-coder-cours/requete-preparee/
+    session_start(); 
+     if(!(isset($_SESSION['is_connected']) && $_SESSION['is_connected'] == 'connected' ))
+     {
+         header('location:login.php');
+         die();
+     }
     
     if(!empty($_POST)){
         //récupérer les données mises à jour du formulaire

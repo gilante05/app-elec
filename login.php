@@ -1,5 +1,10 @@
 <?php
     session_start();
+    if(isset($_SESSION['is_connected']) && ($_SESSION['is_connected'] == 'connected' )){
+         header('location:dashboard.php');
+         die();
+    }
+
     $errors = array();
     if (!empty($_POST)) {
         $username = $_POST['username'];

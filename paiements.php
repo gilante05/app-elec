@@ -40,7 +40,7 @@
         <div class="card mb-3">
             <div class="card-header"><i class="fa fa-table"></i> Liste des paiements</div>
         <div class="card-body">
-            <a href="facture.php" class="btn btn-primary"> Imprimer facture</a>
+            <a href="facture.php" class="btn btn-primary"> Générer une facture</a>
             <div class="table-responsive">
                 <!-- Table here-->
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
