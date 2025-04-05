@@ -5,7 +5,7 @@
          header('location:login.php');
          die();
      }
-     
+
      require('includes/connexion.php');
     
      $db = connect_bd();
@@ -40,6 +40,7 @@
         <div class="card mb-3">
             <div class="card-header"><i class="fa fa-table"></i> Liste des paiements</div>
         <div class="card-body">
+            <a href="facture.php" class="btn btn-primary"> Imprimer facture</a>
             <div class="table-responsive">
                 <!-- Table here-->
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -50,7 +51,6 @@
                         <th>Montant</th>
                         <th>Date de paiement</th>
                         <th>Etat</th>
-                        <th colspan="3">Actions</th>
                     </tr>
                     <?php foreach($paiements as $paiement): ?>
                     <tr>
@@ -64,9 +64,6 @@
                         <?php else: ?>
                         <td>Payé</td>
                         <?php endif; ?>
-                        <td><a href="paiements.php?code=<?=$paiement['Idpaye'];?>" title="Payer" class="edit"><i class="fa fa-thumbs-o-up"></i></a></td>
-                        <td><a href="paiements.php?code=<?=$paiement['Idpaye'];?>" title="Payer" class="edit"><i class="fa fa-thumbs-o-down"></i></a></td>
-                        <td><a href="imprimer.php?code=<?=$paiement['Idpaye'];?>" target="_blank" title="Imprimer" class="edit"><i class="fa fa-print"></i></a></td>
                     </tr>
                 <?php endforeach; ?>
             </table>
