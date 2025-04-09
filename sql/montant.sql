@@ -1,1 +1,0 @@
-SELECT cp.CodeCompteur,(cp.Pu*rlv.Valeur) AS montant,cp.CodeCli,rlv.CodeReleve FROM compteur AS cp,releve AS rlv WHERE cp.CodeCompteur = rlv.CodeCompteur;

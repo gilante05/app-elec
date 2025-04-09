@@ -6,20 +6,17 @@
 		die();
 	}
     if(!empty($_GET['code'])){
-
-        $compteur = $_GET['code'];
-        $titre = "Edition d'un client";
         require('includes/connexion.php');
         $db = connect_bd();
-        $stmt = $db->prepare("SELECT * FROM compteur WHERE CodeCompteur = :code");
-        $stmt->bindValue(':code', $compteur);
-        $stmt->execute();
+        $compteur = $_GET['code'];
+        $stmt = $db->prepare("SELECT * FROM compteur WHERE CodeCompteur = ?");
+        //$stmt->bindValue(':code', $compteur);
+        $stmt->execute([$compteur]);
         // set the resulting array to associative
         $stmt->setFetchMode(PDO::FETCH_ASSOC); 
         //get and print results
         $compteur = $stmt->fetch();
     }
-    //include('includes/utils.php');
    
 ?>
 <!-- insérer header ici -->
@@ -36,7 +33,7 @@
             <h1>Edition d'un Compteur</h1>
         </div>
         <div class="col-md-8">
-                <form action="update_compteur.php" method="post">
+                <form action="models/update_compteur.php" method="post">
                     <div class="form-group">
                         <label>Code</label>
                         <input type="text" name="code" value="<?=$compteur['CodeCompteur']?>" class="form-control" readonly>

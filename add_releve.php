@@ -5,49 +5,17 @@
 		header('location:login.php');
 		die();
 	}
-    
+
     require('includes/connexion.php');
     $db = connect_bd();
-    
-    if(!empty($_POST)){
-        //récupérer les données du formulaire
-        $codereleve = $_POST['code'];
-        $compteur = $_POST['compteur'];
-        $valeur = $_POST['valeur'];
-        $datereleve = $_POST['datereleve'];
-        $datepresentation = $_POST['datepresentation'];
-        $datelimite = $_POST['datelimite'];
-        
-        //connexion à la BD
-        $stmt = $db->prepare("INSERT INTO releve VALUES(?,?,?,?,?,?)");
-        $stmt->execute([$codereleve, $compteur,$valeur,$datereleve,$datepresentation,$datelimite]);
 
-        $sql = "SELECT cp.CodeCli AS CodeCli,cp.Pu AS Pu FROM  compteur AS cp
-                WHERE cp.CodeCompteur = ?";
-        $stmt = $db->prepare($sql);
-        $stmt->execute([$compteur,]);
-        $res = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if($res){
-            $stmt = $db->prepare('INSERT INTO payer(Idpaye,CodeCli,Montant,CodeReleve) VALUES (?,?,?,?)');
-            $idpaye = $codereleve . $compteur;
-            $codecli = $res['CodeCli'];
-            $montant = $valeur * $res['Pu'];
-            $stmt->execute([$idpaye, $codecli,$montant,$codereleve]);
-            
-        }
-        //rediriger vers la page Liste des clients
-        header('location:releves.php');
-        die();
-    }else{
-        $stmt = $db->prepare("SELECT CodeCompteur FROM compteur");
-        $stmt->execute();
-        $compteurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    //include('includes/utils.php');
+    $stmt_Elec = $db->prepare("SELECT CodeCompteur FROM  compteur c WHERE c.TypeCompteur = 'ELECTRICITE'");
+    $stmt_Elec->execute();
+    $resElec = $stmt_Elec->fetchAll(PDO::FETCH_ASSOC);
+    $stmt_Eau = $db->prepare("SELECT CodeCompteur FROM  compteur c WHERE c.TypeCompteur = 'EAU'");
+    $stmt_Eau->execute();
+    $resEau = $stmt_Eau->fetchAll(PDO::FETCH_ASSOC);
 ?> 
-<!-- header ici -->
-<!-- header ici -->
 <?php include('includes/header.php'); ?>  
 <!-- contenu ici -->
 <div class="content-wrapper">
@@ -62,35 +30,51 @@
                 <h1>Nouveau Relevé</h1>
             </div>
             <div class="col-md-8">
-                <form action="add_releve.php" method="post">
+                <form action="traiter_releves.php" method="post">
+                    <!-- Code Auto-généré
                     <div class="form-group">
                         <label>Code</label>
-                        <input type="text" name="code" class="form-control">
+                        <input type="text" name="code_releve" class="form-control">
+                    </div>
+                    -->
+                    <div class="form-group">
+                        <label>Compteur Elec</label>
+                        <input type="text" name="compteur_elec" class="form-control" list="compteurElec" placeholder="Choisir un compteur">
+                        <datalist id="compteurElec">
+                                <?php foreach($resElec as $compteur): ?>
+                                    <option><?=$compteur['CodeCompteur']?></option>
+                                <?php endforeach; ?>
+                        </datalist>
                     </div>
                     <div class="form-group">
-                        <label>Valeur</label>
-                        <input type="number" name="valeur" class="form-control">
+                        <label>Valeur Electricité</label>
+                        <input type="number" name="valeur_elec" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label>Date de relevé</label>
-                        <input type="date" name="datereleve" class="form-control">
+                        <label>Compteur Eau</label>
+                        <input type="text" name="compteur_eau" class="form-control" list="compteurEau" placeholder="Choisir un compteur">
+                        <datalist id="compteurEau">
+                                <?php foreach($resEau as $compteur): ?>
+                                    <option><?=$compteur['CodeCompteur']?></option>
+                                <?php endforeach; ?>
+                        </datalist>
                     </div>
                     <div class="form-group">
-                        <label>Compteur</label>
-                        <select  name="compteur" class="form-control" >
-                            <option value="">Choisir un compteur</option>
-                            <?php foreach($compteurs as $compteur): ?>
-                            <option value="<?=$compteur['CodeCompteur']?>"><?=$compteur['CodeCompteur']?></option>   
-                            <?php endforeach; ?>      
-                        </select>
+                        <label>Valeur Eau</label>
+                        <input type="number" name="valeur_eau" class="form-control">
                     </div>
+                    <div class="form-group">
+                        <label>Date du relevé</label>
+                        <input type="date" name="date_releve" class="form-control">
+                    </div>
+                    
                     <div class="form-group">
                         <label>Date de présentation</label>
-                        <input type="date" name="datepresentation" class="form-control">
+                        <input type="date" name="date_pres" class="form-control">
                     </div>
                     <div class="form-group">
                         <label>Date de limite de paiement</label>
-                        <input type="date" name="datelimite" class="form-control">
+                        <input type="date" name="date_limite" class="form-control">
                     </div>
                     <input type="submit"  value="Enregistrer" class="btn btn-primary">
                 </form>

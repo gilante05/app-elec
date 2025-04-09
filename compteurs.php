@@ -6,25 +6,10 @@
 		header('location:login.php');
 		die();
 	}
-    
-    require('includes/connexion.php');
-    
-    $db = connect_bd();
-    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-    // Number of records to show on each page
-    $records_per_page = 5;
-    
-    $num_comteurs = $db->query('SELECT COUNT(*) FROM compteur')->fetchColumn();
-    $stmt = $db->prepare('SELECT * FROM compteur ORDER BY CodeCompteur LIMIT :current_page, :record_per_page');
-    $stmt->bindValue(':current_page', ($page-1)*$records_per_page, PDO::PARAM_INT);
-    $stmt->bindValue(':record_per_page', $records_per_page, PDO::PARAM_INT);
-    $stmt->execute();
-    // Fetch the records so we can display them in our template.
-    $compteurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    include('includes/utils.php');
 ?> 
 <!-- insérer header ici -->
 <?php include('includes/header.php'); ?>
+<link rel="stylesheet" type="text/css" href="vendor/datatables/jquery.dataTables4.css">
 <!-- contenu va ici -->
 <div class="content-wrapper">
     <div class="container-fluid">
@@ -41,46 +26,77 @@
                 <i class="fa fa-table"></i> Liste des compteurs
             </div>
             <div class="card-body">
-                <a href="add_compteur.php" class="btn btn-primary"> Nouveau</a>
+                <a href="new_compteur.php" class="btn btn-primary"> Nouveau compteur</a>
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" id="compteursTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>Code</th>
+                                <th>N° Compteur</th>
+                                <th> Ref Client</th>
                                 <th>Type</th>
                                 <th>Prix unitaire</th>
-                                <th>Client</th>
-                                <th colspan="2">Actions</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                        <?php if($compteurs):
-                            foreach($compteurs as $compteur): ?>
-                            <tr>
-                                <td><?=$compteur['CodeCompteur'];?></td>
-                                <td><?=$compteur['TypeCompteur'];?></td>
-                                <td><?=$compteur['Pu'];?></td>
-                                <td><?=$compteur['CodeCli'];?></td>
-                                <td><a href="edit_compteur.php?code=<?=$compteur['CodeCompteur'];?>"><i class="fa fa-pencil"></i></a></td>
-                                <td><a href="delete_compteur.php?code=<?=$compteur['CodeCompteur'];?>"><i class="fa fa-trash-o"></i></a></td>
-                            </tr>
-                        <?php endforeach; else: ?>
-                            <tr><td colspan="6" style="text-align:center;">Pas de données à afficher</td></tr>
-                        <?php endif; ?>
-                        </tbody>
                     </table>
-                </div>
-                <div class="pagination">
-                    <?php if ($page > 1): ?> 
-                    <a href="compteurs.php?page=<?=$page-1?>">&lt;&lt;<i class="fas fa-angle-double-left fa-sm"></i></a>
-                    <?php endif; ?>
-                    <?php if ($page*$records_per_page < $num_comteurs): ?>
-                    <a href="compteurs.php?page=<?=$page+1?>"> &gt;&gt;<i class="fas fa-angle-double-right fa-sm"></i></a>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script src="vendor/jquery/jquery.js" type="text/javascript"></script>
+<script type="text/javascript" language="javascript" src="vendor/datatables/jquery.dataTables4.js"></script>
+<script type="text/javascript" language="javascript" src="js/sweetalert2.all.min.js"></script>
+<script type="text/javascript">
+  function delete_compteur() {
+    $(document).delegate(".btn-delete-compteur", "click", function() {
+        var compteur = $(this).attr('id');
+        Swal.fire({
+          icon: 'warning',
+            title: 'Are you sure you want to delete this record '+compteur+'?',
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          // Ajax config
+          $.ajax({
+                type: "POST", //we are using GET method to get data from server side
+                url: 'models/delete_compteur.php', // get the route value
+                data: {code:compteur}, //set data
+                beforeSend: function () {//We add this before send to disable the button once we submit it so that we prevent the multiple click
+                    
+                },
+                success: function (response) {//once the request successfully process to the server side it will return result here
+                    // Reload lists of employees
+                    table.draw();
+
+                    Swal.fire('Success.', response, 'success')
+                }
+            }); 
+        } else if (result.isDenied) {
+            Swal.fire('Changes are not saved', '', 'info')
+        }
+    });
+  });
+}
+
+  $(document).ready(function () {
+      var mainurl = "models/get_compteurs.php";
+      var table = $('#compteursTable').DataTable({
+            "bProcessing": true,
+            "serverSide": true,
+            "ajax":{
+                url :mainurl, // json
+                type: "get",  // type of method
+                error: function(){  
+                    //echo 'error';
+                }
+              }
+      });
+      delete_compteur();
+  });
+</script>
 <!-- footer -->
 <?php include('includes/footer.php'); ?>

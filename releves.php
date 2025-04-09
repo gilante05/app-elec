@@ -19,7 +19,7 @@
     $stmt->execute();
     // Fetch the records so we can display them in our template.
     $releves = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    include('includes/utils.php');
+    //include('includes/utils.php');
 ?> 
 <!-- insérer header ici -->
 <?php include('includes/header.php'); ?>
@@ -41,12 +41,14 @@
             <div class="card-body">
                 <a href="add_releve.php" class="btn btn-primary"> Nouveau</a>
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th>Code</th>
-                                <th>Compteur</th>
-                                <th>Valeur</th>
+                                <th>Compteur Elec</th>
+                                <th>Valeur Elec </th>
+                                <th>Compteur Eau</th>
+                                <th>Valeur Eau</th>
                                 <th>Date de relevé</th>
                                 <th>Date de présentation</th>
                                 <th>Date de limite de paiement</th>
@@ -58,8 +60,10 @@
                             foreach($releves as $releve): ?>
                             <tr>
                                 <td><?=$releve['CodeReleve'];?></td>
-                                <td><?=$releve['CodeCompteur'];?></td>
-                                <td><?=$releve['Valeur'];?></td>
+                                <td><?=$releve['CompteurElec'];?></td>
+                                <td><?=$releve['ValeurElec'];?></td>
+                                <td><?=$releve['CompteurEau'];?></td>
+                                <td><?=$releve['ValeurEau'];?></td>
                                 <td><?=$releve['Date_releve'];?></td>
                                 <td><?=$releve['Date_presentation'];?></td>
                                 <td><?=$releve['Date_limite_paiement'];?></td>
@@ -71,14 +75,6 @@
                         <?php endif; ?>
                         </tbody>
                     </table>
-                </div>
-                <div class="pagination">
-                    <?php if ($page > 1): ?>
-                    <a href="releves.php?page=<?=$page-1?>"><i class="fas fa-angle-double-left fa-sm"></i></a>
-                    <?php endif; ?>
-                    <?php if ($page*$records_per_page < $num_releves): ?>
-                    <a href="releves.php?page=<?=$page+1?>"><i class="fas fa-angle-double-right fa-sm"></i></a>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>

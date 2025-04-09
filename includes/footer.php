@@ -1,8 +1,7 @@
-
 <footer class="sticky-footer">
       <div class="container">
         <div class="text-center">
-          <small>Copyright © JIRAMA 2025</small>
+          <small>Copyright © Jirama 2025</small>
         </div>
       </div>
     </footer>
@@ -23,13 +22,13 @@
           <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="logout.php">Logout</a>
+            <a class="btn btn-primary" href="login.html">Logout</a>
           </div>
         </div>
       </div>
     </div>
     <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
+    <!--<script src="vendor/jquery/jquery.min.js"></script> -->
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Core plugin JavaScript-->
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>

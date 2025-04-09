@@ -8,26 +8,10 @@
     
     require('includes/connexion.php');
     $db = connect_bd();
-    
-    if(!empty($_POST)){
-        //récupérer les données du formulaire
-        $codecompteur = $_POST['code'];
-        $type = $_POST['type'];
-        $pu = $_POST['pu'];
-        $client = $_POST['client'];
-        
-        //connexion à la BD
-        $stmt = $db->prepare("INSERT INTO compteur VALUES(?,?,?,?)");
-        $stmt->execute([$codecompteur, $client,$type,$pu]);
-        //rediriger vers la page Liste des clients
-        header('location:compteurs.php');
-        die();
-    }else{
-        $stmt = $db->prepare("SELECT CodeCli,Nom FROM client");
-        $stmt->execute();
-        $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    include('includes/utils.php');
+    $stmt = $db->prepare("SELECT CodeCli,Nom FROM client");
+    $stmt->execute();
+    $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?> 
 <!-- header ici -->
 <?php include('includes/header.php'); ?>  
@@ -46,7 +30,7 @@
                     <h1>Nouveau Compteur</h1>
                 </div>
                 <div class="col-md-8">
-            <form action="add_compteur.php" method="post">
+            <form action="models/add_compteur.php" method="post">
                 <div class="form-group">
                     <label>Code</label>
                     <input type="text" name="code" class="form-control">

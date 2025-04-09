@@ -1,96 +1,93 @@
-<?php 
-    session_start(); 
-	if(!(isset($_SESSION['is_connected']) && $_SESSION['is_connected'] == 'connected' ))
-	{
-		header('location:login.php');
-		die();
-	}
-    require('includes/connexion.php');
-    
-    $db = connect_bd();
-    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-    // Number of records to show on each page
-    $records_per_page = 5;
-    $num_clients = $db->query('SELECT COUNT(*) FROM client')->fetchColumn();
-
-    $stmt = $db->prepare('SELECT * FROM client ORDER BY CodeCli LIMIT :current_page, :record_per_page');
-    $stmt->bindValue(':current_page', ($page-1)*$records_per_page, PDO::PARAM_INT);
-    $stmt->bindValue(':record_per_page', $records_per_page, PDO::PARAM_INT);
-    $stmt->execute();
-    // Fetch the records so we can display them in our template.
-    $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    //include('includes/utils.php');
-?> 
 <?php include('includes/header.php'); ?>
-
+<link rel="stylesheet" type="text/css" href="vendor/datatables/jquery.dataTables4.css">
 <div class="content-wrapper">
     <div class="container-fluid">
       <!-- Breadcrumbs-->
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
             <li class="breadcrumb-item active">Clients</li>
         </ol>
         <!-- Example DataTables Card-->
         <div class="card mb-3">
-            <div class="card-header"><i class="fa fa-table"></i> Liste des clients</div>
+            <div class="card-header"><i class="fa fa-table"></i> Liste des Clients</div>
         <div class="card-body">
-            <a href="add_client.php" class="btn btn-primary"> Nouveau</a>
+            <div class="top-panel">
+                <a href="new_client.php" class="btn btn-primary">Nouveau Client</a>
+            </div>
             <div class="table-responsive">
                 <!-- Table here-->
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="clientsTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Code</th>
-                            <th>Nom</th>
-                            <th>Prénoms</th>
+                            <th>Nom & Prénoms</th>
+                            <!--<th>Prénoms</th>-->
                             <th>Sexe</th>
                             <th>Quartier</th>
                             <th>Niveau</th>
                             <th>E-mail</th>
-                            <th colspan="2">Actions</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
-                    <!--
-                    <tfoot>
-                        <tr>
-                            <th>Code</th>
-                            <th>Nom</th>
-                            <th>Prénoms</th>
-                            <th>Sexe</th>
-                            <th>Quartier</th>
-                            <th>Niveau</th>
-                            <th>E-mail</th>
-                            <th colspan="2">Actions</th>
-                        </tr>
-                    </tfoot>
-                -->
-                    <tbody>
-                    <?php foreach($clients as $client): ?>
-                            <tr>
-                                <td> <?=$client['CodeCli'];?></td>
-                                <td><?=$client['Nom'];?></td>
-                                <td><?=$client['Prenom'];?></td>
-                                <td><?=$client['Sexe'];?></td>
-                                <td><?=$client['Quartier'];?></td>
-                                <td><?=$client['Niveau'];?></td>
-                                <td><?=$client['Mail'];?></td>
-                                <td><a href="edit_client.php?code=<?=$client['CodeCli'];?>" title="Editer" class="edit"><i class="fa fa-pencil"></i></a></td>
-                                <td><a href="delete_client.php?code=<?=$client['CodeCli'];?>" title="Supprimer" class="trash"><i class="fa fa-trash-o"></i></a></td>
-                            </tr>
-                    <?php endforeach;?>
-                    </tbody>
                 </table> <!-- End of table -->
-                <div class="card-footer small text-muted"><?php if ($page > 1): ?> 
-                    <a href="clients.php?page=<?=$page-1?>"><i class="fa fa-fast-backward"></i></a>
-                    <?php endif; ?>
-                    <?php if ($page*$records_per_page < $num_clients): ?>
-                    <a href="clients.php?page=<?=$page+1?>"><i class="fa fa-fast-forward"></i></a>
-                    <?php endif; ?>
-                </div>
             </div>
         </div>
-        
     </div>
 </div>
+<script src="vendor/jquery/jquery.js" type="text/javascript"></script>
+<script type="text/javascript" language="javascript" src="vendor/datatables/jquery.dataTables4.js"></script>
+<script type="text/javascript" language="javascript" src="js/sweetalert2.all.min.js"></script>
+<script type="text/javascript">
+  function delete_client() {
+    $(document).delegate(".btn-delete-client", "click", function() {
+        var codeCli = $(this).attr('id');
+        Swal.fire({
+          icon: 'warning',
+            title: 'Are you sure you want to delete this record '+codeCli+'?',
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          // Ajax config
+          $.ajax({
+                type: "POST", //we are using GET method to get data from server side
+                url: 'models/delete_client.php', // get the route value
+                data: {code:codeCli}, //set data
+                beforeSend: function () {//We add this before send to disable the button once we submit it so that we prevent the multiple click
+                    
+                },
+                success: function (response) {//once the request successfully process to the server side it will return result here
+                    // Reload lists of employees
+                    table.draw();
+
+                    Swal.fire('Success.', response, 'success')
+                }
+            }); 
+        } else if (result.isDenied) {
+            Swal.fire('Changes are not saved', '', 'info')
+        }
+    });
+  });
+}
+
+  $(document).ready(function () {
+    var mainurl = "models/get_clients.php";
+    var table = $('#clientsTable').DataTable({
+          "bProcessing": true,
+          "serverSide": true,
+          "ajax":{
+              url :mainurl, // json
+              type: "get",  // type of method
+              error: function(){  
+                  //echo 'error';
+              }
+            }
+    });
+    
+    delete_client();
+  });
+</script>
 
 <?php include('includes/footer.php'); ?>          

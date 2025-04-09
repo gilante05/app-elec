@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : dim. 30 mars 2025 à 22:25
+-- Généré le : mer. 09 avr. 2025 à 21:23
 -- Version du serveur : 10.4.32-MariaDB
 -- Version de PHP : 8.2.12
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `gestion_jirama`
 --
---CREATE DATABASE `gestion_jirama`;
---USE `gestion_jirama`;
 
 -- --------------------------------------------------------
 
@@ -103,10 +101,7 @@ CREATE TABLE `payer` (
 --
 
 INSERT INTO `payer` (`Idpaye`, `CodeCli`, `Date_paiement`, `Montant`, `Etat`, `CodeReleve`) VALUES
-('7665293688', '98217981', '2025-03-30', 55814, 0, '9817091'),
-('7665298390', '98217981', '2025-03-30', 5633, 0, '9821793'),
-('981985', '98217981', '2025-03-30', 3400, 0, '981981'),
-('9836', '98217981', '2025-03-30', 2000, 0, '9832°94');
+('2025-04-09', 'C00003', '2025-04-09', 1002000, 0, '2025-04-09');
 
 -- --------------------------------------------------------
 
@@ -116,8 +111,10 @@ INSERT INTO `payer` (`Idpaye`, `CodeCli`, `Date_paiement`, `Montant`, `Etat`, `C
 
 CREATE TABLE `releve` (
   `CodeReleve` varchar(10) NOT NULL,
-  `CodeCompteur` varchar(10) NOT NULL,
-  `Valeur` int(3) NOT NULL,
+  `CompteurElec` varchar(10) NOT NULL,
+  `ValeurElec` int(4) NOT NULL,
+  `CompteurEau` varchar(10) NOT NULL,
+  `ValeurEau` int(4) NOT NULL,
   `Date_releve` date NOT NULL,
   `Date_presentation` date DEFAULT NULL,
   `Date_limite_paiement` date DEFAULT NULL
@@ -127,11 +124,8 @@ CREATE TABLE `releve` (
 -- Déchargement des données de la table `releve`
 --
 
-INSERT INTO `releve` (`CodeReleve`, `CodeCompteur`, `Valeur`, `Date_releve`, `Date_presentation`, `Date_limite_paiement`) VALUES
-('9817091', '7655476597', 987, '2025-03-15', '2025-04-02', '2025-04-03'),
-('981981', '4', 34, '2025-03-06', '2025-03-13', '2025-03-30'),
-('9821793', '7655476597', 131, '2023-10-22', '2023-12-17', '2023-06-18'),
-('9832°94', '4', 20, '0000-00-00', '0000-00-00', '0000-00-00');
+INSERT INTO `releve` (`CodeReleve`, `CompteurElec`, `ValeurElec`, `CompteurEau`, `ValeurEau`, `Date_releve`, `Date_presentation`, `Date_limite_paiement`) VALUES
+('2025-04-09', '5385', 1000, '', 0, '2025-04-09', '2025-04-11', '2025-04-30');
 
 -- --------------------------------------------------------
 
@@ -185,7 +179,7 @@ ALTER TABLE `payer`
 --
 ALTER TABLE `releve`
   ADD PRIMARY KEY (`CodeReleve`),
-  ADD KEY `CodeCompteur` (`CodeCompteur`);
+  ADD KEY `CodeCompteur` (`CompteurElec`);
 
 --
 -- Index pour la table `users`
@@ -226,7 +220,7 @@ ALTER TABLE `payer`
 -- Contraintes pour la table `releve`
 --
 ALTER TABLE `releve`
-  ADD CONSTRAINT `releve_ibfk_1` FOREIGN KEY (`CodeCompteur`) REFERENCES `compteur` (`CodeCompteur`) ON DELETE CASCADE;
+  ADD CONSTRAINT `releve_ibfk_1` FOREIGN KEY (`CompteurElec`) REFERENCES `compteur` (`CodeCompteur`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

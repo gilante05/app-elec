@@ -36,7 +36,7 @@
             <h1>Edition d'un Client</h1>
         </div>
         <div class="col-md-8">
-            <form action="update_client.php" method="post">
+            <form action="models/update_client.php" method="post">
                 <div class="form-group">
                     <label>Code</label>
                     <input type="text" name="code" value="<?=$client['CodeCli']?>" class="form-control" readonly>
@@ -76,7 +76,7 @@
                     <label>E-mail</label>
                     <input type="mail" name="mail" value="<?=$client['Mail']?>" class="form-control">
                 </div>
-                <input type="submit"  value="Enregistrer" class="btn btn-primary">
+                <input type="submit"  value="Enregistrer" name="update" class="btn btn-primary">
             </form>
         </div>
     </div>

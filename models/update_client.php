@@ -1,13 +1,9 @@
 <?php 
-    //https://www.pierre-giraud.com/php-mysql-apprendre-coder-cours/requete-preparee/
-    session_start(); 
-     if(!(isset($_SESSION['is_connected']) && $_SESSION['is_connected'] == 'connected' ))
-     {
-         header('location:login.php');
-         die();
-     }
-    
-    if(!empty($_POST)){
+   //connexion à la BD
+   require('../includes/connexion.php');
+   $db = connect_bd();
+   
+   if(isset($_POST['update'])){
         //récupérer les données mises à jour du formulaire
         $codecli = $_POST['code'];
         $nom = $_POST['nom'];
@@ -16,16 +12,14 @@
         $quartier = $_POST['quartier'];
         $niveau = $_POST['niveau'];
         $mail = $_POST['mail'];
-        //connexion à la BD
-        require('includes/connexion.php');
-        $db = connect_bd();
+
         //Mettre à jour un client avec codecli = code
         $stmt = $db->prepare("UPDATE client SET Nom = ?, Prenom = ? , 
                     Sexe = ?, Quartier = ?, Niveau = ?, Mail = ? WHERE CodeCli = ?");
         $stmt->execute([$nom,$prenom,$sexe,$quartier,$niveau,$mail,$codecli]);
+        
         //rediriger vers la page Liste des clients
-        header('location:clients.php');
+        header('location:../clients.php');
         die();
     }
-    
 ?> 

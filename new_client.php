@@ -5,26 +5,6 @@
 		header('location:login.php');
 		die();
 	}
-
-    if(!empty($_POST)){
-        //récupérer les données du formulaire
-        $codecli = $_POST['code'];
-        $nom = $_POST['nom'];
-        $prenom = $_POST['prenom'];
-        $sexe = $_POST['sexe'];
-        $quartier = $_POST['quartier'];
-        $niveau = $_POST['niveau'];
-        $mail = $_POST['mail'];
-        //connexion à la BD
-        require('includes/connexion.php');
-        $db = connect_bd();
-        $stmt = $db->prepare("INSERT INTO client VALUES(?,?,?,?,?,?,?)");
-        $stmt->execute([$codecli, $nom,$prenom,$sexe,$quartier,$niveau,$mail]);
-        //rediriger vers la page Liste des clients
-        header('location:clients.php');
-        die();
-    }
-    //include('includes/utils.php');
 ?> 
 <?php include('includes/header.php'); ?>  
 <!-- contenu ici -->
@@ -42,7 +22,7 @@
                     <h1>Nouveau Client</h1>
                 </div>
                 <div class="col-md-8">
-                    <form action="add_client.php" method="post">
+                    <form action="models/add_client.php" method="post">
                         <div class="form-group">
                             <label>Code</label>
                             <input type="text" name="code" class="form-control">
@@ -83,7 +63,7 @@
                             <label>E-mail</label>
                             <input type="mail" name="mail" class="form-control">
                         </div>
-                        <input type="submit"  value="Enregistrer" class="btn btn-primary">
+                        <input type="submit"  value="Enregistrer" name="add" class="btn btn-primary">
                     </form>
                 </div>
             </div>

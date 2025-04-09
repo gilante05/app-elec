@@ -9,10 +9,12 @@
      require('includes/connexion.php');
     
      $db = connect_bd();
-/*
-     $sqlElec = "SELECT * FROM `facture` WHERE `CodeCli`= ? AND `TypeCompteur`='ELECTRICITE' AND MONTH(`Date_releve`) = ?";
-     $sqlEau = "SELECT * FROM `facture` WHERE `CodeCli`= ? AND `TypeCompteur`='EAU' AND MONTH(`Date_releve`) = ?";
-  */  
+
+    if(isset($_GET['code'])){
+        $stmt = $db->prepare("UPDATE payer SET Etat = ? WHERE Idpaye = ?");
+        $stmt->execute([1,$_GET['code']]);
+    }
+    
     $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
      // Number of records to show on each page
      $records_per_page = 5;
