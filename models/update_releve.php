@@ -1,30 +1,24 @@
 <?php 
-    //https://www.pierre-giraud.com/php-mysql-apprendre-coder-cours/requete-preparee/
-    session_start(); 
-     if(!(isset($_SESSION['is_connected']) && $_SESSION['is_connected'] == 'connected' ))
-     {
-         header('location:login.php');
-         die();
-     }
-    
     if(!empty($_POST)){
         //récupérer les données mises à jour du formulaire
-        $codereleve = $_POST['code'];
-        $codecompteur = $_POST['compteur'];
-        $valeur = $_POST['valeur'];
-        $datereleve = $_POST['datereleve'];
-        $datepresentation = $_POST['datepresentation'];
-        $datelimite = $_POST['datelimite'];
+        $codeReleve = $_POST['code_releve'];
+        //$compteurElec = $_POST['compteur_elec'];
+        $valeurElec = $_POST['valeur_elec'];
+        //$compteurEau = $_POST['compteur_eau'];
+        $valeurEau = $_POST['valeur_eau'];
+        //$dateReleve = $_POST['date_releve'];
+        $datePres = $_POST['date_pres'];
+        $dateLimite = $_POST['date_limite'];
         //connexion à la BD
-        require('includes/connexion.php');
+        require('../includes/connexion.php');
         $db = connect_bd();
         //Mettre à jour un releve avec codereleve= code
-        $stmt = $db->prepare("UPDATE releve SET   
-                      CodeCompteur= ?, Valeur = ?, Date_releve = ?, Date_presentation = ?,
-                      Date_limite_paiement = ? WHERE CodeReleve = ?");
-        $stmt->execute([$codecompteur,$valeur,$datereleve,$datepresentation,$datelimite,$codereleve]);
+        $stmt = $db->prepare("UPDATE releve 
+                            SET  ValeurElec = ?, ValeurEau = ?, Date_presentation = ?,
+                                Date_limite_paiement = ? WHERE CodeReleve = ?");
+        $stmt->execute([$valeurElec,$valeurEau,$datePres,$dateLimite,$codeReleve]);
         //rediriger vers la page liste des releves
-        header('location:releves.php');
+        header('location:../releves.php');
         die();
     }
     

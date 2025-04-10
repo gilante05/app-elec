@@ -39,27 +39,35 @@
             <form action="models/update_releve.php" method="post">
                 <div class="form-group">
                     <label>Code</label>
-                    <input type="text" name="code" value="<?=$releve['CodeReleve']?>" class="form-control" readonly>
+                    <input type="text" name="code_releve" value="<?=$releve['CodeReleve']?>" class="form-control" readonly>
                 </div>
                 <div class="form-group">
-                    <label>Compteur</label>
-                    <input type="text" name="compteur" value="<?=$releve['CodeCompteur']?>" class="form-control" readonly >
+                    <label>Compteur Electricité</label>
+                    <input type="text" name="compteur_elec" value="<?=$releve['CompteurElec']?>" class="form-control" readonly >
                 </div>
                 <div class="form-group">
-                    <label>Valeur</label>
-                    <input type="number"  min="0" name="valeur" value="<?=$releve['Valeur']?>" class="form-control" >
+                    <label>Valeur Electricité</label>
+                    <input type="number"  min="0" name="valeur_elec" value="<?=$releve['ValeurElec']?>" class="form-control" >
+                </div>
+                <div class="form-group">
+                    <label>Compteur Eau</label>
+                    <input type="text" name="compteur_eau" value="<?=$releve['CompteurEau']?>" class="form-control" readonly >
+                </div>
+                <div class="form-group">
+                    <label>Valeur Eau</label>
+                    <input type="number"  min="0" name="valeur_eau" value="<?=$releve['ValeurEau']?>" class="form-control" >
                 </div>
                 <div class="form-group">
                     <label>Date du relevé</label>
-                    <input type="date" name="datereleve" value="<?=$releve['Date_releve']?>"  class="form-control">
+                    <input type="date" name="date_releve" value="<?=$releve['Date_releve']?>"  class="form-control" readonly>
                 </div>
                 <div class="form-group">
                     <label>Date du présentation</label>
-                    <input type="date" name="datepresentation" value="<?=$releve['Date_presentation']?>" class="form-control">
+                    <input type="date" name="date_pres" value="<?=$releve['Date_presentation']?>" class="form-control">
                 </div>
                 <div class="form-group">
                     <label>Date du limite de paiment</label>
-                    <input type="date" name="datelimite" value="<?=$releve['Date_limite_paiement']?>" class="form-control" >
+                    <input type="date" name="date_limite" value="<?=$releve['Date_limite_paiement']?>" class="form-control" >
                 </div>
                 <input type="submit"  value="Enregistrer" class="btn btn-primary">
             </form>

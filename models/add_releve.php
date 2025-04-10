@@ -46,6 +46,6 @@
         }
     }
     //Toujours rediriger vers la page Liste des relevés
-    header('location:releves.php');
+    header('location:../releves.php');
     die();
 ?>
