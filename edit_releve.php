@@ -23,7 +23,6 @@
    
 ?>
 <!-- insérer header ici -->
-<!-- insérer header ici -->
 <?php include('includes/header.php'); ?>  
 <!-- contenu ici -->
 <div class="content-wrapper">
@@ -37,7 +36,7 @@
             <h1>Edition d'un Relevé</h1>
         </div>
         <div class="col-md-8">
-            <form action="update_releve.php" method="post">
+            <form action="models/update_releve.php" method="post">
                 <div class="form-group">
                     <label>Code</label>
                     <input type="text" name="code" value="<?=$releve['CodeReleve']?>" class="form-control" readonly>
