@@ -46,6 +46,44 @@
         </div>
     </div>
 </div>
+<!-- Modal action paiement ici -->
+<div class="modal" id="edit-paie">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Employee</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form action="update.php" id="edit-form">
+                        <input class="form-control" type="hidden" name="id">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input class="form-control" type="text" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="first_name">First Name</label>
+                            <input class="form-control" type="text" name="first_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">Last Name</label>
+                            <input class="form-control" type="text" name="last_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <textarea class="form-control" type="text" name="address" rows="3"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="btnUpdateSubmit">Update</button>
+                        <button type="button" class="btn btn-danger float-right" data-dismiss="modal">Close</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- Fin modal -->
 <script src="vendor/jquery/jquery.js" type="text/javascript"></script>
 <script type="text/javascript" language="javascript" src="vendor/datatables/jquery.dataTables4.js"></script>
 <script type="text/javascript" language="javascript" src="js/sweetalert2.all.min.js"></script>
