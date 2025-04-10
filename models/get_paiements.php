@@ -34,7 +34,7 @@
 			$payer['Idpaye'], $payer['CodeCli'],
 			$payer['Date_paiement'], $payer['Montant'],
 			$etat, $payer['CodeReleve'],
-			'<button class="btn btn-sm  mt-2 ml-2 btn-payer" id="'.$payer['Idpaye'].'" type="button" '. $btn_status. '><i class="fa fa-cubes "></i></button>'
+			'<button class="btn btn-sm  mt-2 ml-2 btn-payer" id="'.$payer['Idpaye'].'" type="button" '. $btn_status. ' title="Payer"><i class="fa fa-cubes "></i></button>'
 		);
 		$records[] = $row;
 	}
