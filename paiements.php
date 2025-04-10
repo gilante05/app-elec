@@ -5,18 +5,18 @@
       <!-- Breadcrumbs-->
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="dashboard.php">Dashboard</a></li>
-            <li class="breadcrumb-item active">Clients</li>
+            <li class="breadcrumb-item active">Paiements</li>
         </ol>
         <!-- Example DataTables Card-->
         <div class="card mb-3">
-            <div class="card-header"><i class="fa fa-table"></i> Liste des Clients</div>
+            <div class="card-header"><i class="fa fa-table"></i> Liste des paiements</div>
         <div class="card-body">
             <div class="top-panel">
-                <a href="new_client.php" class="btn btn-primary">Nouveau Client</a>
+                <a href="facture.php" class="btn btn-primary">Générer une facture</a>
             </div>
             <div class="table-responsive">
                 <!-- Table here-->
-                <table class="table table-bordered" id="clientsTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="payerTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>Code</th>
@@ -37,13 +37,13 @@
 <script type="text/javascript" language="javascript" src="vendor/datatables/jquery.dataTables4.js"></script>
 <script type="text/javascript" language="javascript" src="js/sweetalert2.all.min.js"></script>
 <script type="text/javascript">
-  var table = $('#clientsTable');
-  function delete_client() {
-    $(document).delegate(".btn-delete-client", "click", function() {
-        var codeCli = $(this).attr('id');
+  var table = $('#payerTable');
+  function payer_facture() {
+    $(document).delegate(".btn-payer", "click", function() {
+        var idPayer = $(this).attr('id');
         Swal.fire({
           icon: 'warning',
-            title: 'Voulez-vous vraiement supprimer le client '+codeCli+' ?',
+            title: 'Voulez-vous payer ce facture '+idPayer+' ?',
             showDenyButton: false,
             showCancelButton: true,
             confirmButtonText: 'Oui',
@@ -55,8 +55,8 @@
           // Ajax config
           $.ajax({
                 type: "POST", //we are using GET method to get data from server side
-                url: 'models/delete_client.php', // get the route value
-                data: {code:codeCli}, //set data
+                url: 'models/payer_facture.php', // get the route value
+                data: {id:idPayer}, //set data
                 beforeSend: function () {//We add this before send to disable the button once we submit it so that we prevent the multiple click
                     
                 },
@@ -88,7 +88,7 @@
             }
     });
     
-    delete_client();
+    payer_facture();
   });
 </script>
 
