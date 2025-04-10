@@ -38,15 +38,18 @@
 <script type="text/javascript" language="javascript" src="vendor/datatables/jquery.dataTables4.js"></script>
 <script type="text/javascript" language="javascript" src="js/sweetalert2.all.min.js"></script>
 <script type="text/javascript">
+  var table = $('#clientsTable');
   function delete_client() {
     $(document).delegate(".btn-delete-client", "click", function() {
         var codeCli = $(this).attr('id');
         Swal.fire({
           icon: 'warning',
-            title: 'Are you sure you want to delete this record '+codeCli+'?',
+            title: 'Voulez-vous vraiement supprimer le client '+codeCli+' ?',
             showDenyButton: false,
             showCancelButton: true,
-            confirmButtonText: 'Yes'
+            confirmButtonText: 'Oui',
+            cancelButtonText: 'Non'
+
         }).then((result) => {
           /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
@@ -59,10 +62,10 @@
                     
                 },
                 success: function (response) {//once the request successfully process to the server side it will return result here
-                    // Reload lists of employees
-                    table.draw();
-
-                    Swal.fire('Success.', response, 'success')
+                    // Reload lists of customers
+                    $(table).DataTable().ajax.reload();
+                    Swal.fire('Success.', response, 'success');
+                    
                 }
             }); 
         } else if (result.isDenied) {
@@ -74,7 +77,7 @@
 
   $(document).ready(function () {
     var mainurl = "models/get_clients.php";
-    var table = $('#clientsTable').DataTable({
+    $(table).DataTable({
           "bProcessing": true,
           "serverSide": true,
           "ajax":{

@@ -48,55 +48,57 @@
 <script type="text/javascript" language="javascript" src="vendor/datatables/jquery.dataTables4.js"></script>
 <script type="text/javascript" language="javascript" src="js/sweetalert2.all.min.js"></script>
 <script type="text/javascript">
-  function delete_compteur() {
-    $(document).delegate(".btn-delete-compteur", "click", function() {
-        var compteur = $(this).attr('id');
-        Swal.fire({
-          icon: 'warning',
-            title: 'Are you sure you want to delete this record '+compteur+'?',
-            showDenyButton: false,
-            showCancelButton: true,
-            confirmButtonText: 'Yes'
-        }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
-        if (result.isConfirmed) {
-          // Ajax config
-          $.ajax({
-                type: "POST", //we are using GET method to get data from server side
-                url: 'models/delete_compteur.php', // get the route value
-                data: {code:compteur}, //set data
-                beforeSend: function () {//We add this before send to disable the button once we submit it so that we prevent the multiple click
-                    
-                },
-                success: function (response) {//once the request successfully process to the server side it will return result here
-                    // Reload lists of employees
-                    table.draw();
-
-                    Swal.fire('Success.', response, 'success')
+    var table = $('#compteursTable');
+    function delete_compteur() {
+        $(document).delegate(".btn-delete-compteur", "click", function() {
+            var compteur = $(this).attr('id');
+            Swal.fire({
+            icon: 'warning',
+                title: 'Voulez-vous vraiement supprimer le compteur '+compteur+' ?',
+                showDenyButton: false,
+                showCancelButton: true,
+                confirmButtonText: 'Oui',
+                cancelButtonText: 'Non'
+            }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+                // Ajax config
+                $.ajax({
+                        type: "POST", //we are using GET method to get data from server side
+                        url: 'models/delete_compteur.php', // get the route value
+                        data: {code:compteur}, //set data
+                        beforeSend: function () {//We add this before send to disable the button once we submit it so that we prevent the multiple click
+                            
+                        },
+                        success: function (response) {//once the request successfully process to the server side it will return result here
+                            // Reload lists of counter
+                            $(table).DataTable().ajax.reload();
+                            Swal.fire('Success.', response, 'success');
+                           
+                        }
+                    }); 
+                } else if (result.isDenied) {
+                    Swal.fire('Changes are not saved', '', 'info')
                 }
-            }); 
-        } else if (result.isDenied) {
-            Swal.fire('Changes are not saved', '', 'info')
-        }
+            });
+        });
+    }
+
+    $(document).ready(function () {
+        var mainurl = "models/get_compteurs.php";
+        $(table).DataTable({
+                "bProcessing": true,
+                "serverSide": true,
+                "ajax":{
+                    url :mainurl, // json
+                    type: "GET",  // type of method
+                    error: function(){  
+                        //echo 'error';
+                    }
+                }
+        });
+        delete_compteur();
     });
-  });
-}
-
-  $(document).ready(function () {
-      var mainurl = "models/get_compteurs.php";
-      var table = $('#compteursTable').DataTable({
-            "bProcessing": true,
-            "serverSide": true,
-            "ajax":{
-                url :mainurl, // json
-                type: "get",  // type of method
-                error: function(){  
-                    //echo 'error';
-                }
-              }
-      });
-      delete_compteur();
-  });
 </script>
 <!-- footer -->
 <?php include('includes/footer.php'); ?>

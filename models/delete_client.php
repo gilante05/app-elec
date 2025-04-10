@@ -10,9 +10,9 @@
         $stmt = $db->prepare('DELETE FROM client WHERE CodeCli = ?');
         $res = $stmt->execute([$_POST['code']]);
         if($res){
-            echo "Employee has been deleted.";
+            echo "Client  ".$_POST['code']." a été supprimé avec succès.";
         } else {
-            echo "Error: " . $sql . "<br>" . $mysqli->error;
+            echo "Error: Impossible de supprimer le Client ". $_POST['code'].".";
         }
     }
 ?> 

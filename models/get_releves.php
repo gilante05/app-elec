@@ -33,7 +33,7 @@
 	$records = array();
 	foreach($releves as $releve){
 		$row = array(
-			$releve['CodeReleve'], $releve['CompteurElec']." ".$releve['ValeurElec'],$releve['CompteurEau'],
+			$releve['CodeReleve'], $releve['CompteurElec'],$releve['ValeurElec'],$releve['CompteurEau'],
 			$releve['ValeurEau'],$releve['Date_releve'],$releve['Date_presentation'],$releve['Date_limite_paiement'],
 			'<a href="edit_client.php?code='.$releve['CodeReleve'].'" title="Editer" class="edit"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;'.
 			'<button class="btn btn-sm trash mt-2 ml-2 btn-delete-client" id="'.$releve['CodeReleve'].'" type="button"><i class="fa fa-trash-o"></i></button>'

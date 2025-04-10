@@ -8,7 +8,7 @@
     
     require('includes/connexion.php');
     $db = connect_bd();
-    $stmt = $db->prepare("SELECT CodeCli,Nom FROM client");
+    $stmt = $db->prepare("SELECT CodeCli,Nom,Prenom FROM client");
     $stmt->execute();
     $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -52,7 +52,7 @@
                     <select  name="client" class="form-control">
                         <option value="">Choisir un client</option>
                         <?php foreach($clients as $client): ?>
-                        <option value="<?=$client['CodeCli']?>"><?=$client['Nom']?></option>   
+                        <option value="<?=$client['CodeCli']?>"><?=$client['Nom'].' '.$client['Prenom']?></option>   
                         <?php endforeach; ?>      
                     </select>
                 </div>

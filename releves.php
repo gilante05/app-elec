@@ -5,21 +5,6 @@
 		header('location:login.php');
 		die();
 	}
-    require('includes/connexion.php');
-    
-    $db = connect_bd();
-    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-    // Number of records to show on each page
-    $records_per_page = 5;
-    
-    $num_releves = $db->query('SELECT COUNT(*) FROM releve')->fetchColumn();
-    $stmt = $db->prepare('SELECT * FROM releve ORDER BY CodeReleve LIMIT :current_page, :record_per_page');
-    $stmt->bindValue(':current_page', ($page-1)*$records_per_page, PDO::PARAM_INT);
-    $stmt->bindValue(':record_per_page', $records_per_page, PDO::PARAM_INT);
-    $stmt->execute();
-    // Fetch the records so we can display them in our template.
-    $releves = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    //include('includes/utils.php');
 ?> 
 <!-- insérer header ici -->
 <?php include('includes/header.php'); ?>
@@ -39,9 +24,9 @@
                 <i class="fa fa-table"></i> Liste des relevés
             </div>
             <div class="card-body">
-                <a href="add_releve.php" class="btn btn-primary"> Nouveau</a>
+                <a href="new_releve.php" class="btn btn-primary"> Nouveau</a>
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <table class="table table-bordered" id="relevesTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th>Code</th>
@@ -52,33 +37,69 @@
                                 <th>Date de relevé</th>
                                 <th>Date de présentation</th>
                                 <th>Date de limite de paiement</th>
-                                <th colspan="2">Actions</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                        <?php if($releves): 
-                            foreach($releves as $releve): ?>
-                            <tr>
-                                <td><?=$releve['CodeReleve'];?></td>
-                                <td><?=$releve['CompteurElec'];?></td>
-                                <td><?=$releve['ValeurElec'];?></td>
-                                <td><?=$releve['CompteurEau'];?></td>
-                                <td><?=$releve['ValeurEau'];?></td>
-                                <td><?=$releve['Date_releve'];?></td>
-                                <td><?=$releve['Date_presentation'];?></td>
-                                <td><?=$releve['Date_limite_paiement'];?></td>
-                                <td><a href="edit_releve.php?code=<?=$releve['CodeReleve'];?>"><i class="fa fa-pencil"></i></a></td>
-                                <td><a href="delete_releve.php?code=<?=$releve['CodeReleve'];?>"><i class="fa fa-trash-o"></i></a></td>
-                            </tr>
-                            <?php endforeach; else: ?>
-                            <tr><td colspan="8" style="text-align:center;">Pas de données à afficher</td></tr>
-                        <?php endif; ?>
-                        </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script src="vendor/jquery/jquery.js" type="text/javascript"></script>
+<script type="text/javascript" language="javascript" src="vendor/datatables/jquery.dataTables4.js"></script>
+<script type="text/javascript" language="javascript" src="js/sweetalert2.all.min.js"></script>
+<script type="text/javascript">
+  function delete_releve() {
+    $(document).delegate(".btn-delete-client", "click", function() {
+        var releve = $(this).attr('id');
+        Swal.fire({
+          icon: 'warning',
+            title: 'Are you sure you want to delete this record '+releve+'?',
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          // Ajax config
+          $.ajax({
+                type: "POST", //we are using GET method to get data from server side
+                url: 'models/delete_releve.php', // get the route value
+                data: {code:releve}, //set data
+                beforeSend: function () {//We add this before send to disable the button once we submit it so that we prevent the multiple click
+                    
+                },
+                success: function (response) {//once the request successfully process to the server side it will return result here
+                    // Reload lists of employees
+                    table.draw();
+
+                    Swal.fire('Success.', response, 'success')
+                }
+            }); 
+        } else if (result.isDenied) {
+            Swal.fire('Changes are not saved', '', 'info')
+        }
+    });
+  });
+}
+
+  $(document).ready(function () {
+    var mainurl = "models/get_releves.php";
+    var table = $('#relevesTable').DataTable({
+          "bProcessing": true,
+          "serverSide": true,
+          "ajax":{
+              url :mainurl, // json
+              type: "get",  // type of method
+              error: function(){  
+                  //echo 'error';
+              }
+            }
+    });
+    
+    delete_releve();
+  });
+</script>
 <!-- footer -->
 <?php include('includes/footer.php'); ?>
