@@ -1,5 +1,5 @@
 <?php
-    require('includes/connexion.php');
+    require('../includes/connexion.php');
     $db = connect_bd();
 
     if(!empty($_POST)){
@@ -14,12 +14,12 @@
         //Générer le code relevé
         $codeReleve = $dateReleve.$_POST['valeur_elec'];
         
-        //connexion à la BD
         $stmt = $db->prepare("INSERT INTO releve VALUES(?,?,?,?,?,?,?,?)");
-        $InsertReleve = $stmt->execute([$codeReleve, $compteurElec,$valeurElec,
-                        $compteurEau,$valeurEau,$dateReleve,
-                        $datePres,$dateLimite]
-                    );
+        $InsertReleve = $stmt->execute([
+                                $codeReleve, $compteurElec,$valeurElec,
+                                $compteurEau,$valeurEau,$dateReleve,
+                                $datePres,$dateLimite
+                             ]);
 
         if($InsertReleve){
             $puElec = $puEau = 0;
