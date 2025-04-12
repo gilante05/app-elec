@@ -1,14 +1,14 @@
 <?php
-    require('includes/connexion.php');
-    $db = connect_bd();
-    if(isset($_POST)){
+        require('includes/connexion.php');
+        $db = connect_bd();
+
         $sql = "SELECT c.CodeCli, c.Nom, c.Prenom, c.Quartier, p.Date_paiement,
         r.CodeReleve, r.CompteurElec, r.ValeurElec, r.CompteurEau, r.ValeurEau, r.Date_releve,
         r.Date_presentation, r.Date_limite_paiement
         FROM client c, payer p, releve r 
-        WHERE (c.CodeCli = p.CodeCli AND p.CodeReleve = r.CodeReleve AND p.Idpaye = ? AND Date_paiement = ?)";
+        WHERE (c.CodeCli = p.CodeCli AND p.CodeReleve = r.CodeReleve AND p.Idpaye = '2025-04-09' AND MONTH(`Date_paiement`)=4)";
         $stmt = $db->prepare($sql);
-        $stmt->execute([$_POST['id_payer'],$_POST['date_payer']]);
+        $stmt->execute();
         $facture = $stmt->fetch(PDO::FETCH_ASSOC);
         //$mois = (int)date('m', strtotime($mois_fac));
         if($facture){
@@ -83,5 +83,4 @@
             $pdf->Output('facture'.$codeCli.'-'.$dateFacture.'.pdf', 'I'); // Affiche directement le PDF dans le navigateur
             die();
         }
-    }
 ?>
