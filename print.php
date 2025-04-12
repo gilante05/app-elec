@@ -1,7 +1,10 @@
 <?php
     require('includes/connexion.php');
     $db = connect_bd();
+
     if(isset($_POST)){
+        $mois_12 = array('Janvier','Février','Mars','Avril','Mai','Juin',
+                        'Juillet','Août','Septembre','Octobre','Décembre');
         $sql = "SELECT c.CodeCli, c.Nom, c.Prenom, c.Quartier, p.Date_paiement,
         r.CodeReleve, r.CompteurElec, r.ValeurElec, r.CompteurEau, r.ValeurEau, r.Date_releve,
         r.Date_presentation, r.Date_limite_paiement
@@ -23,7 +26,7 @@
             $valEau = $facture['ValeurEau'];
             $dateFacture = $facture['Date_releve'];
             $codeCli = $facture['CodeCli'];
-            $mois = (int)date('m', strtotime($dateFacture)) ;
+            $mois = $mois_12[(int)date('m', strtotime($dateFacture)) -1]. ' '.(int)date('Y', strtotime($dateFacture)) ;
             $puElec =  $puEau = 0;
             if($cptElec){
                 $stmtElec = $db->prepare("SELECT Pu FROM `compteur` WHERE `CodeCompteur`= ? AND `TypeCompteur`='ELECTRICITE'");
@@ -35,6 +38,7 @@
                 $stmtEau = $db->prepare("SELECT Pu FROM `compteur` WHERE `CodeCompteur`= ? AND `TypeCompteur`='EAU'");
                 $stmtEau->execute([$cptEau]);
                 $resPuEau = $stmtEau->fetch(PDO::FETCH_ASSOC);
+                $puEau = isset($resPuEau)? $resPuEau['Pu']:0;
             }
 
             // Création du PDF

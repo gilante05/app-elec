@@ -31,12 +31,11 @@
             </div>
             <div class="col-md-8">
                 <form action="models/add_releve.php" method="post">
-                    <!-- Code Auto-généré
+                    
                     <div class="form-group">
                         <label>Code</label>
                         <input type="text" name="code_releve" class="form-control">
                     </div>
-                    -->
                     <div class="form-group">
                         <label>Compteur Elec</label>
                         <input type="text" name="compteur_elec" class="form-control" list="compteurElec" placeholder="Choisir un compteur">

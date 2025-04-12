@@ -11,8 +11,7 @@
         $dateReleve = $_POST['date_releve'];
         $datePres = $_POST['date_pres'];
         $dateLimite = $_POST['date_limite'];
-        //Générer le code relevé
-        $codeReleve = $dateReleve.$_POST['valeur_elec'];
+        $codeReleve = $_POST['code_releve'];
         
         $stmt = $db->prepare("INSERT INTO releve VALUES(?,?,?,?,?,?,?,?)");
         $InsertReleve = $stmt->execute([
@@ -25,22 +24,22 @@
             $puElec = $puEau = 0;
             $codeCli = '';
             if(!empty($compteurElec)){
-                $stmt = $db->prepare("SELECT CodeCli, Pu FROM  compteur WHERE CodeCompteur = ?");
+                $stmt = $db->prepare("SELECT CodeCli, Pu FROM  compteur WHERE CodeCompteur = ? AND TypeCompteur='ELECTRICITE'");
                 $stmt->execute([$compteurElec]);
-                $resCompteur = $stmt->fetch(PDO::FETCH_ASSOC);
-                $puElec = $resCompteur['Pu'];
-                $codeCli = $resCompteur['CodeCli'];
+                $compteur = $stmt->fetch(PDO::FETCH_ASSOC);
+                $puElec = $compteur['Pu'];
+                $codeCli = $compteur['CodeCli'];
             } 
             if(!empty($compteurEau)){
-                $stmt = $db->prepare("SELECT CodeCli, Pu FROM  compteur WHERE CodeCompteur = ?");
+                $stmt = $db->prepare("SELECT CodeCli, Pu FROM  compteur WHERE CodeCompteur = ? AND TypeCompteur='EAU'");
                 $stmt->execute([$compteurEau]);
-                $resCompteur = $stmt->fetch(PDO::FETCH_ASSOC);
-                $puEau = $resCompteur['Pu'];
-                $codeCli = $resCompteur['CodeCli'];
+                $compteur = $stmt->fetch(PDO::FETCH_ASSOC);
+                $puEau = $compteur['Pu'];
+                $codeCli = $compteur['CodeCli'];
             } 
             
             $stmt = $db->prepare('INSERT INTO payer(Idpaye,CodeCli,Montant,CodeReleve) VALUES (?,?,?,?)');
-            $idpaye = $codeReleve . $compteurElec;
+            $idpaye = 'Fac'.$codeReleve;
             $montant = ($valeurEau * $puEau) + ($valeurElec * $puElec);
             $stmt->execute([$idpaye, $codeCli, $montant, $codeReleve]);
         }

@@ -5,17 +5,19 @@
          header('location:login.php');
          die();
      }
-
     require('includes/connexion.php');
-    
     $db = connect_bd();
-
-    $stmt = $db->prepare('SELECT * FROM client ORDER BY CodeCli');
-    $stmt->execute();
-    // Fetch the records so we can display them in our template.
-    $clients = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $dateReleve = '';
+    if(isset($_POST)){
+        $codeReleve = $_POST['code_releve'];
+        $codeCli = $_POST['code_cli'];
+        $stmt = $db->prepare("SELECT Date_releve FROM releve WHERE  CodeReleve = ?");
+        $stmt->execute([$codeReleve]);
+        $releve = $stmt->fetch(PDO::FETCH_ASSOC);
+        setlocale(LC_TIME, 'fr_FR');
+        $moisReleve = date('F',strtotime($releve['Date_releve']));
+    }
 ?>
-
 <?php include('includes/header.php'); ?>  
   <!-- contenu ici -->
   <div class="content-wrapper">
@@ -35,16 +37,11 @@
                       <form action="print.php" method="post">
                             <div class="form-group">
                                 <label>Code Client</label>
-                                <input type="text" name="code_cli" class="form-control" list="list-client">
-                                <datalist id="list-client">
-                                <?php foreach($clients as $client): ?>
-                                    <option><?=$client['CodeCli']?></option>
-                                <?php endforeach; ?>
-                                </datalist>
+                                <input type="text" name="code_cli" class="form-control"  readonly value="<?=$codeCli?>">
                             </div>
                           <div class="form-group">
                               <label>Mois</label>
-                              <input type="month" name="mois_fact" class="form-control">
+                              <input type="text" name="mois_fact" class="form-control" value="<?=$moisReleve;?>" readonly>
                           </div>
                           <div class="form-group">
                             <input type="submit"  value="Imprimer" class="btn btn-primary">

@@ -34,7 +34,7 @@
 			$payer['Idpaye'], $payer['CodeCli'],
 			$payer['Date_paiement'], $payer['Montant'],
 			$etat, $payer['CodeReleve'],
-			'<button class="btn btn-sm  mt-2 ml-2 btn-payer" id="'.$payer['Idpaye'].'" type="button" '. $btn_status. ' title="Payer"><i class="fa fa-cubes "></i></button> &nbsp;&nbsp;&nbsp;'.
+			'<button class="btn btn-sm  mt-2 ml-2 btn-payer" id="'.$payer['Idpaye'].'" type="button" '. $btn_status. ' title="Payer" ><i class="fa fa-cubes "></i></button> &nbsp;&nbsp;&nbsp;'.
 			'<form action="print.php" method="post" style="display:inline-block;">
 				<input type="hidden" name="id_payer" value="'.$payer['Idpaye'].'">
 				<input type="hidden" name="date_payer" value="'.$payer['Date_paiement'].'">
